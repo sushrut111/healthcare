@@ -2,9 +2,11 @@
 <br>
 <br>
 <br>
+{{message}}
+<!-- <a class="btn" onclick="Materialize.toast('{{message}}', 4000,'rounded')">Toast!</a> -->
        <div class="card">
     <div class="card-content">
-      <span class="card-title activator grey-text text-darken-4">Log in here<i class="material-icons right">more_vert</i></span>
+      <span class="card-title activator grey-text text-darken-4">Log in here<i class="material-icons right">person_add</i></span>
       
       <div class="row">
     <form class="col s12" method="post" action="auth">
@@ -29,50 +31,94 @@
     </div>
     <div class="card-reveal">
       <span class="card-title grey-text text-darken-4">Register Here<i class="material-icons right">close</i></span>
-      <div class="row">
-    <form class="col s12">
+      
+    <form class="col s12" method="post" action="/register">
       <div class="row">
         <div class="input-field col s6">
-          <input placeholder="Placeholder" id="first_name" type="text" class="validate">
+          <i class="material-icons prefix">mode_edit</i>
+          <input id="first_name" name="fname" type="text" class="validate">
           <label for="first_name">First Name</label>
         </div>
         <div class="input-field col s6">
-          <input id="last_name" type="text" class="validate">
+          <i class="material-icons prefix">mode_edit</i>
+          <input id="last_name" type="text" name="lname" class="validate">
           <label for="last_name">Last Name</label>
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s12">
-      <input name="gender" type="radio" value="male" id="test1" />
-      <label for="test1">Male</label>
-      <input name="gender" type="radio" value="female" id="test2" />
-      <label for="test2">Female</label>
-      <input name="gender" type="radio" value="other" id="test3" />
-      <label for="test3">Other</label>
-    </p>
+      <div class="col s12">
+        <label for="age">Gender</label>
+        <div id="gender"><input class="with-gap" name="gender" value="male" type="radio" id="test1"  />
+        <label for="test1">Male</label>
+        <input class="with-gap" name="gender" value="female" type="radio" id="test2"  />
+        <label for="test2">Female</label>
+        <input class="with-gap=" name="gender" value="other" type="radio" id="test3"  />
+        <label for="test3">Other</label>
+
         </div>
-      </div>      <div class="row">
-        <div class="input-field col s12">
-          <input id="password" type="password" class="validate">
+
+
+      </div>
+      </div>
+
+ <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">schedule</i>
+          <input id="icon_prefix" name="age" type="number" class="validate">
+          <label for="icon_prefix">Age</label>
+        </div>
+        <div class="input-field col s6">
+          <i class="material-icons prefix">phone</i>
+          <input id="icon_telephone" type="tel" name="phone" class="validate">
+          <label for="icon_telephone">Telephone</label>
+        </div>
+      </div>
+    
+  </div>
+    <div class="row">
+       <div class="input-field col s12">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="password" type="text" class="validate" name="username">
+          <label for="password">Username</label>
+        </div>
+    </div>   
+      <div class="row">
+        <div class="col s12">
+             
+                  <div class="input-field col s6">
+          <i class="material-icons prefix">remove_red_eye</i>
+          <input id="password" type="password" class="validate" name="password">
           <label for="password">Password</label>
         </div>
-      </div>      
-      <div class="row">
-        <div class="input-field col s12">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">remove_red_eye</i>
           <input id="password" type="password" class="validate">
           <label for="password">Confirm Password</label>
         </div>
+
+        </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="email" type="email" class="validate">
+          <i class="material-icons prefix">email</i>
+          <input id="email" type="email" class="validate" name="email">
           <label for="email">Email</label>
         </div>
       </div>
-      
+      <br><br><br><br>
+        <div><button class="btn waves-effect waves-light" type="submit">Submit
+    <i class="material-icons right">send</i></div>
     </form>
   </div>
         
     </div>
   </div>
             
+<script type="text/javascript">
+ // Materialize.toast({{message}}, displayLength, className, completeCallback);
+ $( document ).ready(function() {
+    Materialize.toast('{{message}}', 3000, 'rounded');
+});
+ </script>

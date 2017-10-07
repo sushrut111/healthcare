@@ -109,14 +109,39 @@ server.register([{
         method: 'POST',
         path: '/register',
         handler: function (request, reply) {
-            var name = request.payload.name;
-            var lab = request.payload.lab;
-            var expt = request.payload.number;
-            var wiki = request.payload.wiki;
-            const db = request.mongo.db;
-            db.collection('labsdata').insert({lab:lab,expt:expt,name:name,wiki:wiki});
-            reply.redirect("/testi");
-    }
+            var name = request.payload.fname + request.payload.lname;
+            var phone = request.payload.phone;
+            var age = request.payload.age;
+            var email = request.payload.email;
+            var gender = request.payload.gender;
+            var username = request.payload.username;
+            var password = request.payload.password;
+                const db = request.mongo.db;
+            var exist = 0;
+            
+            if(!(name&&phone&&age&&email&&gender&&username&&password)){
+                reply.view('login',{message:"incomplete"},{layout:"loginlay"});
+            }
+            else if(username){
+                db.collection('users').findOne({'username':username}, function (err, result) {
+                if(result) exist = 1; 
+
+            if(exist==1) 
+                reply.view('login',{message:"exists"},{layout:"loginlay"});
+
+            else{
+            db.collection('users').insert({email:email,phone:phone,age:age,email:email,gender:gender,name:name,username:username,password:password});
+            reply.view('login',{message:"success"},{layout:"loginlay"});
+
+            }    
+
+
+            });
+
+ 
+            }
+
+        }
     });
 
 
@@ -140,8 +165,8 @@ server.register([{
             //     if (err) {
             //         return reply(Boom.internal('Internal MongoDB error', err));
             //     }
-                console.log(result.username+" "+result.password);
-                if(result.password==request.payload.password){
+                // console.log(result.username+" "+result.password);
+                if(result&&result.password==request.payload.password){
                     reply("Please wait").state('session', { 'user':request.payload.username,'isloggedin':true, 'name':result.name }).redirect('/accept');
                     // console.log(request.state.session);
                 }
