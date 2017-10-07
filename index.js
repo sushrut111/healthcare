@@ -78,32 +78,6 @@ server.register([{
     });
     server.route({
         method: 'GET',
-        path: '/{lab}/{expt}',
-        handler: function(request,reply){
-            var lab = request.params.lab;
-            var expt = request.params.expt;
-            const db = request.mongo.db;
-            // const ObjectID = request.mongo.ObjectID;
-            
-            db.collection('labsdata').findOne({'lab':lab,'expt':expt}, function (err, result) {
-                if(!result) reply().redirect('/accept');
-                else
-                {
-                                var exptname = result.name;
-                                var wiki = result.wiki;
-                                console.log(wiki);
-
-                                // reply.file('./public/experiment.html');
-
-                reply.view('experiment',{lab:lab,exptname:exptname,number:expt,wiki:wiki});
-                }
-            });
-
-
-        }
-    });
-    server.route({
-        method: 'GET',
         path: '/testi',
         handler: function (request, reply) {
             reply.view('insert');
@@ -131,13 +105,6 @@ server.register([{
     }
     });
 
-    // server.route({
-    //     method: 'GET',
-    //     path: '/testi',
-    //     handler: {
-    //         view: 'login'
-    //     }
-    // });
 
 
     server.route({
@@ -212,46 +179,6 @@ server.register([{
             reply.file('./public/images/'+request.params.img);
         }
     });
-    server.route({
-        method: 'GET',
-        path: '/manual/{filename}',
-        handler: function (request, reply) {
-            reply.file('./public/manuals/'+request.params.filename+".pdf");
-        }
-    });
-    server.route({
-        method: 'GET',
-        path: '/examples/{filename}',
-        handler: function (request, reply) {
-            reply.file('./public/manuals/'+request.params.filename+".pdf");
-        }
-    });
-    server.route({
-        method: 'GET',
-        path: '/quiz/{filename}',
-        handler: function (request, reply) {
-            reply.file('./public/manuals/'+request.params.filename+".pdf");
-        }
-    });
-    server.route({
-        method: 'GET',
-        path: '/sim/{lab}/{expt}',
-        handler: function (request, reply) {
-            var lab = request.params.lab;
-            if(lab=="eda") reply.view('simeda');
-            else if(lab=="cs") reply.view('simcs');
-            else  reply.view('simerr');
-        }
-    });
-    server.route({
-        method: 'GET',
-        path: '/sim/cs/images/{img}',
-        handler: function (request, reply) {
-            var img = request.params.img;
-            reply.file('./public/images/'+img);
-        }
-    });
-});
 server.route({
     method: 'GET',
     path: '/{name}',
