@@ -105,6 +105,19 @@ server.register([{
     }
     });
 
+    server.route({
+        method: 'POST',
+        path: '/register',
+        handler: function (request, reply) {
+            var name = request.payload.name;
+            var lab = request.payload.lab;
+            var expt = request.payload.number;
+            var wiki = request.payload.wiki;
+            const db = request.mongo.db;
+            db.collection('labsdata').insert({lab:lab,expt:expt,name:name,wiki:wiki});
+            reply.redirect("/testi");
+    }
+    });
 
 
     server.route({
@@ -179,6 +192,7 @@ server.register([{
             reply.file('./public/images/'+request.params.img);
         }
     });
+});
 server.route({
     method: 'GET',
     path: '/{name}',
