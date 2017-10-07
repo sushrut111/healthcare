@@ -73,7 +73,21 @@ server.register([{
         handler: function(request,reply){
             console.log(request.state.session);
             if(!request.state.session) reply("log in first").redirect("/login");
-            else reply.view('dashboard',{name : request.state.session.user});
+
+            else{
+                const db = request.mongo.db;
+
+
+            db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
+                console.log(result);
+                reply.view('dashboard',{name :result.name,email:result.email,gender:result.gender});
+                 
+            });
+
+
+
+
+            }
         }
     });
     server.route({
