@@ -52,6 +52,39 @@
   
 <!--Navbar-->
       {{{content}}}
+
+  <!-- Element Showed -->
+  <a id="menu" class="waves-effect waves-light btn btn-floating" onclick="opentar()" ><i class="material-icons">contact_phone</i></a>
+
+  <!-- Tap Target Structure -->
+  <div class="tap-target red" data-activates="menu">
+    <div class="tap-target-content white-text">
+      <h5>Contacts</h5>
+  <button class="chip" onclick="window.alert('contacted')">
+    <img src="/images/ambulance.png" alt="Contact Person">
+    Ambulance
+  </button><br>
+  <span class="small-text">Selecting this will send the ambulance service an sms.</span>
+<hr>
+<button class="chip" onclick="window.alert('contacted')">
+    <img src="/images/doctor.png" alt="Contact Person">
+    Call Doctor
+  </button>
+<br>  Selecting this will connect you to your added doctor
+<hr>
+
+    </div>
+  </div>
+  <script type="text/javascript">
+    var open = 0;
+    function opentar () {
+      if(open == 0)
+    {open = 1; $('.tap-target').tapTarget('open');}
+      else
+    {open = 0; $('.tap-target').tapTarget('close');}
+
+    }
+  </script>
       <!--Import jQuery before materialize.js-->
       <script type="text/javascript">
          // $(".button-collapse").sideNav();

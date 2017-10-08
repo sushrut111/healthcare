@@ -157,6 +157,28 @@ server.register([{
 
         }
     });
+    server.route({
+        method:'GET',
+        path:'/doctor',
+        handler: function(request,reply) {
+            if(!request.state.session) reply("log in first").redirect("/login");
+
+            else{
+                const db = request.mongo.db;
+
+
+            db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
+                console.log(result);
+                reply.view('doctor',{name :result.name,email:result.email,gender:result.gender});
+                 
+            });
+
+
+
+
+            }
+        }
+    });
 
 
     server.route({
