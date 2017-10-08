@@ -236,7 +236,8 @@ server.route({
     method: 'GET',
     path: '/{name}',
     handler: function (request, reply) {
-        reply('Hello, ' + encodeURIComponent(request.params.name) + ' your browser: '+request.headers['user-agent']);
+        // reply('Hello, ' + encodeURIComponent(request.params.name) + ' your browser: '+request.headers['user-agent']);
+        reply.view('testblue');
     }
 });
 server.register({
