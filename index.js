@@ -177,6 +177,17 @@ server.register([{
         }
     });
     server.route({
+        method: 'GET',
+        path: '/history',
+        handler: function (request, reply) {
+            if(!request.state.session) reply("log in first").redirect("/login");
+            else
+            {
+                reply.view('plots');
+            }
+    }
+    });
+    server.route({
         method: 'POST',
         path: '/doctor',
         handler: function (request, reply) {
