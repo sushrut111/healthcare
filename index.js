@@ -77,12 +77,31 @@ server.register([{
             else{
                 const db = request.mongo.db;
 
+                    db.collection('users').aggregate([
+                    { $lookup:
+                        {    
+                        from: 'doctors',
+                        localField: 'doctor',
+                        foreignField: 'id',
+                        as: 'doctor'
+                        }
+                    }          
+                    ], function(err, result) {
+                    if (err) throw err;
+                    result = result[0];
+                reply.view('dashboard',{name :result.name,email:result.email,gender:result.gender,doctor:result.doctor[0]});
+                // result = JSON.parse(result);
+                // console.log(result[0].name);
+                // reply(result[0]);
+                });
 
-            db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
-                console.log(result);
-                reply.view('dashboard',{name :result.name,email:result.email,gender:result.gender});
+
+
+            // db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
+            //     console.log(result);
+            //     reply.view('dashboard',{name :result.name,email:result.email,gender:result.gender});
                  
-            });
+            // });
 
 
 
@@ -158,19 +177,65 @@ server.register([{
         }
     });
     server.route({
+        method: 'POST',
+        path: '/doctor',
+        handler: function (request, reply) {
+            if(!request.state.session) reply("log in first").redirect("/login");
+            else
+            {
+            var doctor = request.payload.doctor;
+            const db = request.mongo.db;
+            db.collection('users').update({username:request.state.session.user},{$set:{'doctor':doctor}});
+            reply.redirect("/doctor");
+
+            }
+    }
+    });
+
+
+    server.route({
         method:'GET',
         path:'/doctor',
         handler: function(request,reply) {
             if(!request.state.session) reply("log in first").redirect("/login");
 
             else{
+                console.log("**************************************************************");
+                // console.log(request.payload);
                 const db = request.mongo.db;
+                console.log(request.payload==null);
+                if(request.payload!=null && request.payload.doctor){
+                    db.collection('users').update({'username':request.state.user},{$set:{'doctor':request.payload.doctor}});        
+                }
+                
 
 
-            db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
-                console.log(result);
-                reply.view('doctor',{name :result.name,email:result.email,gender:result.gender});
-                 
+                db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
+                if(!result.doctor)
+                {
+                    // reply("no doc");
+                   reply.view('adddoctor',{name :result.name,email:result.email,gender:result.gender});
+                }
+                else {
+                // reply("here");
+                    db.collection('users').aggregate([
+                    { $lookup:
+                        {    
+                        from: 'doctors',
+                        localField: 'doctor',
+                        foreignField: 'id',
+                        as: 'doctor'
+                        }
+                    }          
+                    ], function(err, result) {
+                    if (err) throw err;
+                    result = result[0];
+                reply.view('doctor',{name :result.name,email:result.email,gender:result.gender,doctor:result.doctor[0]});
+                // result = JSON.parse(result);
+                // console.log(result[0].name);
+                // reply(result[0]);
+                });
+                }
             });
 
 
@@ -179,7 +244,17 @@ server.register([{
             }
         }
     });
-
+    server.route({
+        method: 'GET',
+        path: '/fetchdoctors',
+        handler: function(request,reply){
+            const db = request.mongo.db;
+            db.collection('doctors').find().toArray(function(err, items) {
+                 console.log(items);
+                 reply(items);
+             });
+        }
+    });
 
     server.route({
         method: 'GET',
@@ -258,8 +333,8 @@ server.route({
     method: 'GET',
     path: '/{name}',
     handler: function (request, reply) {
-        // reply('Hello, ' + encodeURIComponent(request.params.name) + ' your browser: '+request.headers['user-agent']);
-        reply.view('testblue');
+        reply('Hello, ' + encodeURIComponent(request.params.name) + ' your browser: '+request.headers['user-agent']);
+        // reply.view('testblue');
     }
 });
 server.register({
