@@ -120,7 +120,7 @@ server.register([{
         method: 'GET',
         path: '/testing',
         handler: function (request, reply) {
-            reply.view('simeda', null, { layout: 'blank' });
+            reply.view('plots');
     }
     });
 
