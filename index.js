@@ -3,6 +3,8 @@
 const Hapi = require('hapi');
 const Good = require('good');
 const Path = require('path');
+var request = require('request');
+const http  = require('http');
 const server = new Hapi.Server();
 server.connection({ port: 3000, host: '0.0.0.0' });
 
@@ -180,12 +182,46 @@ server.register([{
         method: 'GET',
         path: '/history',
         handler: function (request, reply) {
+
+
             if(!request.state.session) reply("log in first").redirect("/login");
-            else
-            {
-                reply.view('plots');
+
+            else{
+                const db = request.mongo.db;
+
+                    db.collection('users').aggregate([
+                    { $lookup:
+                        {    
+                        from: 'doctors',
+                        localField: 'doctor',
+                        foreignField: 'id',
+                        as: 'doctor'
+                        }
+                    }          
+                    ], function(err, result) {
+                    if (err) throw err;
+                    result = result[0];
+                reply.view('plots',{name :result.name,email:result.email,gender:result.gender,doctor:result.doctor[0]});
+                // result = JSON.parse(result);
+                // console.log(result[0].name);
+                // reply(result[0]);
+                });
+
+
+
+            // db.collection('users').findOne({'username':request.state.session.user}, function (err, result) {
+            //     console.log(result);
+            //     reply.view('dashboard',{name :result.name,email:result.email,gender:result.gender});
+                 
+            // });
+
+
+
+
             }
-    }
+
+}
+
     });
     server.route({
         method: 'POST',
@@ -241,7 +277,7 @@ server.register([{
                     ], function(err, result) {
                     if (err) throw err;
                     result = result[0];
-                reply.view('doctor',{name :result.name,email:result.email,gender:result.gender,doctor:result.doctor[0]});
+                reply.view('doctor',{name :result.name,phone:result.phone,email:result.email,gender:result.gender,doctor:result.doctor[0]});
                 // result = JSON.parse(result);
                 // console.log(result[0].name);
                 // reply(result[0]);
@@ -264,6 +300,22 @@ server.register([{
                  console.log(items);
                  reply(items);
              });
+        }
+    });
+    //http://bulk.rocktwosms.com/spanelv2/api.php?username=nitwarangal&password=NITWARANGAL2020&to=".$phoneno."&from=TMWSDC&message=HI THERE
+    server.route({
+        method: 'GET',
+        path: '/ambulance',
+        handler: function(request,reply){
+            var name = request.params.name;
+            var phone = request.params.phone;
+            http.get({
+  hostname: 'bulk.rocktwosms.com',
+  path: '/spanelv2/api.php?username=nitwarangal&password=NITWARANGAL2020&to='+9403039900+'&from=SSNITW&message=ambulance_for_'+name+'_urgently.',
+  agent: false  // create a new agent just for this one request
+}, (res) => {
+  reply(res);
+});
         }
     });
 
